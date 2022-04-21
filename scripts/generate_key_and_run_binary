@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+crackme_zed_frequency > /tmp/muh_key
+
+echo "Testing with key: "
+cat /tmp/muh_key
+ZED-Frequency.bin /tmp/muh_key

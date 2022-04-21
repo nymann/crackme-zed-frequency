@@ -17,6 +17,7 @@ WORKDIR /home/crackme/
 # RUN python3 -m site # if this ever breaks to get dist-packages folder.
 COPY --from=compile-image /usr/local/lib/python3.9/dist-packages/ /usr/local/lib/python3.9/dist-packages/
 COPY --from=compile-image /usr/local/bin/crackme_zed_frequency /usr/local/bin/
+COPY scripts/generate_key_and_run_binary /usr/local/bin/
 
 USER crackme
-CMD ZED-Frequency.bin
+CMD generate_key_and_run_binary
