@@ -9,7 +9,7 @@ docker run -it license
 ```
 
 <details>
-<summary>Ghidra reversed</summary>
+<summary>Write up</summary>
 
 ```c
 int main(int argc,char **argv)
@@ -33,32 +33,32 @@ int main(int argc,char **argv)
   }
   key_file_stream = fopen(argv[1],"rt");
   for (i = 0; i < 0x1a; i = i + 1) {
-                    /* initialize the first 26 elements in the array to 0 */
+    // initialize the first 26 elements in the array to 0 */
     auStack168[i] = 0;
   }
-                    /* for each character in the file */
+  // for each character in the file
   while (character = fgetc(key_file_stream), character != -1) {
-                    /* If character is not lowercase a to z */
+    // If character is not lowercase a to z
     if ((character < 0x61) || (0x7a < character)) {
-                    /* If character is uppercase A to Z */
+      // If character is uppercase A to Z
       if ((0x40 < character) && (character < 0x5b)) {
-                    /* Set austack[char - 'A'] = austack[char - 'A'] + 1 */
+        // Set austack[char - 'A'] = austack[char - 'A'] + 1 */
         auStack168[character + -0x41] = auStack168[character + -0x41] + 1;
       }
     }
     else {
-                    /* character is lowercase [a;z] */
+      // character is lowercase [a;z]
       auStack168[character + -0x61] = auStack168[character + -0x61] + 1;
     }
   }
   printf("the generated key is: ");
-                    /* print 25 characters of the generated key */
+  // print the first 26 characters of the generated key */
   for (local_b4 = 0; local_b4 < 0x1a; local_b4 = local_b4 + 1) {
     printf("%d",(ulong)auStack168[local_b4]);
     local_38[local_b4] = (char)auStack168[local_b4] + '0';
   }
   local_1e = 0;
-  putchar(10);
+  putchar(10); // Print newline character \n to stdout
   character = strcmp(local_38,"01234567890123456789012345");
   if (character == 0) {
     puts("you succeed!!");
@@ -73,5 +73,23 @@ int main(int argc,char **argv)
   __stack_chk_fail();
 }
 ```
+
+So the logic goes something like this:
+
+- Given a keyfile
+- For each character in the keyfile
+- If the character is alpha lowercase
+  - `output[letter - 'a'] += 1`
+- If the character is alpha uppercase
+  - `output[letter - 'A'] += 1`
+- If the character is not a letter
+  - do nothing
+
+Now the final sequence:
+
+- For each integer in the `output` array
+- `key += chr(integer + '0')`
+- If the key matches "01234567890123456789012345"
+  - "you succeed!!"
 
 </details>
