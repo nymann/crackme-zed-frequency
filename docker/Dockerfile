@@ -1,4 +1,4 @@
-FROM debian:bookworm AS base-image
+FROM debian:12.11 AS base-image
 RUN apt-get update && useradd -m --system crackme
 RUN apt-get install --assume-yes --no-install-recommends python3
 
